@@ -2,6 +2,19 @@ import React from 'react'
 import './App.css'
 import logo from './logo.svg'
 import Coin from './components/Coin/Coin'
+import AccountBalance from './components/AccountBalance/AccountBalance'
+import styled from 'styled-components';
+
+const Table = styled.table`
+    margin: 50px auto 50px auto;
+    display: inline-block;
+    font-size: 1.4rem;
+    color: white;
+`
+
+const Thead = styled.thead`
+    font-weight: bold;
+`
 
 function App() {
   return (
@@ -12,21 +25,22 @@ function App() {
           Coin Exchange Project
         </h1>
       </header>
-      <table className="coin-table">
-        <thead className="coin-table-header">
+      <AccountBalance amount={10000}/>
+      <Table>
+        <Thead>
           <tr>
             <td>Name</td>
             <td>Ticker</td>
             <td>Price</td>
           </tr>
-        </thead>
+        </Thead>
         <tbody>
           <Coin name="Bitcoin" ticker="BTC" price={38000} />
           <Coin name="Ethereum" ticker="ETH" price={2580} />
           <Coin name="Tether" ticker="USDT" price={1} />
           <Coin name="Chainlink" ticker="LINK" price={23} />
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 }
