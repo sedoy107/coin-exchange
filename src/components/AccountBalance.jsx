@@ -19,5 +19,5 @@ export default class AccountBalance extends Component {
 
 
 AccountBalance.propTypes = {
-    amount: PropTypes.string.isRequired,
+    amount: PropTypes.number.isRequired,
 }
