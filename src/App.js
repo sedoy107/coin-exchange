@@ -1,8 +1,14 @@
 import React from 'react'
-import './App.css'
 import AppHeader from './components/AppHeader'
 import CoinList from './components/CoinList'
 import AccountBalance from './components/AccountBalance'
+
+import styled from 'styled-components'
+
+const Page = styled.div`
+  text-align: center;
+  background-color: rgb(27, 53, 94);
+`
 class App extends React.Component {
 
   constructor(props) {
@@ -36,11 +42,11 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
-        <AppHeader />
+      <Page>
+        <AppHeader title="Coin Exchange Project"/>
         <AccountBalance amount={this.state.balance}/>
         <CoinList coinData={this.state.coinData} />
-      </div>
+      </Page>
     )
   }
 }

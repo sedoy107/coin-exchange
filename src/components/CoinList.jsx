@@ -1,7 +1,7 @@
 import Coin from './Coin'
 
 import React, { Component } from 'react'
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const Table = styled.table`
     margin: 50px auto 50px auto;

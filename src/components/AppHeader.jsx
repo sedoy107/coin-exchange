@@ -1,5 +1,5 @@
 import logo from '../assets/logo.svg'
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 import React, { Component } from 'react'
 
@@ -41,7 +41,7 @@ export default class AppHeader extends Component {
       <Header>
         <Img src={logo} alt="App Logo"/>
         <H1>
-            Coin Exchange Project
+            {this.props.title}
         </H1>
       </Header>
     )
