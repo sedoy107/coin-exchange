@@ -15,6 +15,11 @@ const Thead = styled.thead`
 `
 
 export default class CoinList extends Component {
+
+    constructor(props) {
+        super(props)
+    }
+
     render() {
         return (
             <Table>
@@ -28,7 +33,7 @@ export default class CoinList extends Component {
                 <tbody>
                     {
                         this.props.coinData.map( 
-                            coin => <Coin key={coin.ticker} {...coin} />
+                            coin => <Coin key={coin.ticker} {...coin} handleRefresh={this.props.handleRefresh}/>
                         )
                     }
                 </tbody>

@@ -11,12 +11,8 @@ export default class Coin extends Component {
 
     constructor(props) {
         super(props)
-        this.state = {
-            price: this.props.price
-        }
-
         // Bind "this" context to the function execution
-        this.handleClickRefresh = this.handleClickRefresh.bind(this)
+        this.handleClick = this.handleClick.bind(this)
     }
 
     /* componentDidMount() {
@@ -34,17 +30,11 @@ export default class Coin extends Component {
         setInterval(callback, period)
     } */
 
-    handleClickRefresh(event) {
+    handleClick(e) {
         // Prevent default action
-        event.preventDefault();
-
-        const price_flux = 0.995 + Math.random() * 0.01
-            
-        this.setState((prevState) => {
-            return {
-                price: prevState.price * price_flux
-            }
-        })
+        e.preventDefault();
+        // Call the actual handler propagated from the parent
+        this.props.handleRefresh(this.props.ticker);
     }
 
     render() {
@@ -52,10 +42,10 @@ export default class Coin extends Component {
             <tr>
                 <Td>{this.props.name}</Td>
                 <Td>{this.props.ticker}</Td>
-                <Td>${this.state.price}</Td>
+                <Td>${this.props.price}</Td>
                 <Td>
                     <form action="#" method="POST">
-                        <button onClick={this.handleClickRefresh}>Refresh</button>
+                        <button onClick={this.handleClick}>Refresh</button>
                     </form>
                 </Td>
             </tr>
