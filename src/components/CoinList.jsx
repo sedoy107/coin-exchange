@@ -16,10 +16,6 @@ const Thead = styled.thead`
 
 export default class CoinList extends Component {
 
-    constructor(props) {
-        super(props)
-    }
-
     render() {
         return (
             <Table>

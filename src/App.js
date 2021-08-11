@@ -51,7 +51,7 @@ class App extends React.Component {
         return {
           name: coin.name,
           ticker: coin.ticker,
-          price: coin.price * price_flux
+          price: Math.round(coin.price * price_flux * 1000) / 1000 
         }
       }
       return {...coin}
