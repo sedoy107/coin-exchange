@@ -8,10 +8,27 @@ const Section = styled.section`
 `
 
 export default class AccountBalance extends Component {
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick(e) {
+        // Disable default form submission action
+        e.preventDefault();
+        // Call global handler
+        this.props.handleBalanceVisibility()
+    }
+
     render() {
+        const balanceButtonValue = this.props.balanceHidden ? "Show Balance" : "Hide Balance";
+        const balance = this.props.balanceHidden ? "***" : this.props.amount;
         return (
             <Section>
-                $ {this.props.amount}
+                $ {balance}
+                <form action="#" method="POST">
+                    <button onClick={this.handleClick}>{balanceButtonValue}</button>
+                </form>
             </Section>
         )
     }
@@ -19,5 +36,8 @@ export default class AccountBalance extends Component {
 
 
 AccountBalance.propTypes = {
-    amount: PropTypes.number.isRequired,
+    amount: PropTypes.oneOfType([
+        PropTypes.string.isRequired,
+        PropTypes.number.isRequired,
+    ]),
 }

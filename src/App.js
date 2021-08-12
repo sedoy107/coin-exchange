@@ -15,31 +15,37 @@ class App extends React.Component {
     super(props)
     this.state = {
       balance: 10000,
+      balanceHidden: false,
       coinData: [
         {
           name: "Bitcoin",
           ticker: "BTC",
-          price: 38000
+          price: 38000,
+          balance: 0.5,
         },
         {
           name: "Ethereum",
           ticker: "ETH",
-          price: 2580
+          price: 2580,
+          balance: 3.2,
         },
         {
           name: "Tether",
           ticker: "USDT",
-          price: 1
+          price: 1,
+          balance: 1000,
         },
         {
           name: "Chainlink",
           ticker: "LINK",
-          price: 23
+          price: 23,
+          balance: 0,
         },
       ],
     }
 
     this.handleRefresh = this.handleRefresh.bind(this)
+    this.handleBalanceVisibility = this.handleBalanceVisibility.bind(this)
   }
 
   handleRefresh(ticker) {
@@ -51,23 +57,34 @@ class App extends React.Component {
         return {
           name: coin.name,
           ticker: coin.ticker,
-          price: Math.round(coin.price * price_flux * 1000) / 1000 
+          price: Math.round(coin.price * price_flux * 1000) / 1000,
+          balance: coin.balance,
         }
       }
       return {...coin}
     })
         
     this.setState({coinData: newCoinData})
-}
+ }
+
+ handleBalanceVisibility() {
+   this.setState({balanceHidden: !this.state.balanceHidden})
+ }
 
   render() {
     return (
       <Page>
         <AppHeader title="Coin Exchange Project" />
-        <AccountBalance amount={this.state.balance} />
+        <AccountBalance 
+          amount={this.state.balance} 
+          balanceHidden={this.state.balanceHidden}
+          handleBalanceVisibility = {this.handleBalanceVisibility}
+        />
         <CoinList 
           coinData={this.state.coinData} 
-          handleRefresh={this.handleRefresh} />
+          handleRefresh={this.handleRefresh}
+          balanceHidden={this.state.balanceHidden} 
+        />
       </Page>
     )
   }
