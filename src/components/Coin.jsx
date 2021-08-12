@@ -11,12 +11,6 @@ const Td = styled.td`
 
 export default class Coin extends Component {
 
-    constructor(props) {
-        super(props)
-        // Bind "this" context to the function execution
-        this.handleClick = this.handleClick.bind(this)
-    }
-
     /* componentDidMount() {
         const period = 500;
         const callback = () => {
@@ -32,7 +26,7 @@ export default class Coin extends Component {
         setInterval(callback, period)
     } */
 
-    handleClick(e) {
+    handleClick = (e) => {
         // Prevent default action
         e.preventDefault();
         // Call the actual handler propagated from the parent

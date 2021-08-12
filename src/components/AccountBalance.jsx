@@ -8,12 +8,8 @@ const Section = styled.section`
 `
 
 export default class AccountBalance extends Component {
-    constructor(props) {
-        super(props);
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-    handleClick(e) {
+    
+    handleClick = (e) => {
         // Disable default form submission action
         e.preventDefault();
         // Call global handler
@@ -25,7 +21,7 @@ export default class AccountBalance extends Component {
         const balance = this.props.balanceHidden ? "***" : this.props.amount;
         return (
             <Section>
-                $ {balance}
+                Balance: ${balance}
                 <form action="#" method="POST">
                     <button onClick={this.handleClick}>{balanceButtonValue}</button>
                 </form>
