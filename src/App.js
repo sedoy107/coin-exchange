@@ -68,7 +68,12 @@ class App extends React.Component {
  }
 
  handleBalanceVisibility() {
-   this.setState({balanceHidden: !this.state.balanceHidden})
+   this.setState((prevState) => {
+     return {
+       ...prevState,
+       balanceHidden: !this.state.balanceHidden
+     }
+   })
  }
 
   render() {
