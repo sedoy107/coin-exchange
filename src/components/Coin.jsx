@@ -11,26 +11,11 @@ const Td = styled.td`
 
 export default class Coin extends Component {
 
-    /* componentDidMount() {
-        const period = 500;
-        const callback = () => {
-            const price_flux = 0.995 + Math.random() * 0.01
-            
-            this.setState((prevState) => {
-                return {
-                    price: prevState.price * price_flux
-                }
-            })
-        }
-
-        setInterval(callback, period)
-    } */
-
     handleClick = (e) => {
         // Prevent default action
         e.preventDefault();
         // Call the actual handler propagated from the parent
-        this.props.handleRefresh(this.props.ticker);
+        this.props.handleRefresh(this.props.id);
     }
 
     render() {
@@ -38,7 +23,7 @@ export default class Coin extends Component {
         return (
             <tr>
                 <Td>{this.props.name}</Td>
-                <Td>{this.props.ticker}</Td>
+                <Td>{this.props.symbol}</Td>
                 <Td>${this.props.price}</Td>
                 <Td>{balance}</Td>
                 <Td>
@@ -53,7 +38,7 @@ export default class Coin extends Component {
 
 Coin.propTypes = {
     name: PropTypes.string.isRequired,
-    ticker: PropTypes.string.isRequired,
+    symbol: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     balance: PropTypes.oneOfType([
         PropTypes.string.isRequired,

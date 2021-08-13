@@ -4,56 +4,62 @@ import CoinList from './components/CoinList'
 import AccountBalance from './components/AccountBalance'
 
 import styled from 'styled-components'
+import axios from 'axios'
+
+const COIN_TABLE_LENGTH = 10
 
 const Page = styled.div`
   text-align: center;
   background-color: rgb(27, 53, 94);
 `
+
 class App extends React.Component {
 
   state = {
     balance: 10000,
     balanceHidden: false,
-    coinData: [
-      {
-        name: "Bitcoin",
-        ticker: "BTC",
-        price: 38000,
-        balance: 0.5,
-      },
-      {
-        name: "Ethereum",
-        ticker: "ETH",
-        price: 2580,
-        balance: 3.2,
-      },
-      {
-        name: "Tether",
-        ticker: "USDT",
-        price: 1,
-        balance: 1000,
-      },
-      {
-        name: "Chainlink",
-        ticker: "LINK",
-        price: 23,
-        balance: 0,
-      },
-    ],
+    coinData: [],
   }
 
-  handleRefresh = (ticker) => {
+  componentDidMount = async () => {
+        await this.getCoinData(COIN_TABLE_LENGTH)
+        const updatePeriod = 300 * 1000;
+        setInterval(async() => {
+          await this.getCoinData(COIN_TABLE_LENGTH)
+        }, updatePeriod);
+    }
 
-    const price_flux = 0.995 + Math.random() * 0.01
+  getCoinData = async (count) => {
+    const coinsUrl = 'https://api.coinpaprika.com/v1/coins';
+    
+    const coins = (await axios(coinsUrl)).data
 
+    for (let i = 0; i < count; i++) {
+      coins[i].price = await this.getCoinPrice(coins[i].id)
+    }
+
+    const newCoinData = coins.slice(0,count).map((coin) => {
+      return {
+        ...coin,
+      }
+    })
+
+    this.setState({coinData: newCoinData})
+  }
+
+  getCoinPrice = async (id) => {
+    const url = `https://api.coinpaprika.com/v1/tickers/${id}`
+    const tickerData = (await axios(url)).data;
+    return Math.round(tickerData.quotes.USD.price * 1000) / 1000
+  }
+
+  handleRefresh = async (id) => {
+
+    const newPrice = await this.getCoinPrice(id)
+    
     let newCoinData = this.state.coinData.map((coin) => {
-      if (coin.ticker === ticker) {
-        return {
-          name: coin.name,
-          ticker: coin.ticker,
-          price: Math.round(coin.price * price_flux * 1000) / 1000,
-          balance: coin.balance,
-        }
+      if (coin.id === id) {
+        coin.price = newPrice
       }
       return {...coin}
     })
@@ -74,6 +80,7 @@ class App extends React.Component {
     return (
       <Page>
         <AppHeader title="Coin Exchange Project" />
+        <button onClick={async () => {await this.getCoinData(COIN_TABLE_LENGTH)}}>Get Coin Data</button>
         <AccountBalance 
           amount={this.state.balance} 
           balanceHidden={this.state.balanceHidden}
@@ -81,7 +88,7 @@ class App extends React.Component {
         />
         <CoinList 
           coinData={this.state.coinData} 
-          handleRefresh={this.handleRefresh}
+          handleRefresh={async (id) => {this.handleRefresh(id)}}
           balanceHidden={this.state.balanceHidden} 
         />
       </Page>
