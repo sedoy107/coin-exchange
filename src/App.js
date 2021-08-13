@@ -32,10 +32,10 @@ class App extends React.Component {
   getCoinData = async (count) => {
     const coinsUrl = 'https://api.coinpaprika.com/v1/coins';
     
-    const coins = (await axios(coinsUrl)).data
+    const coins = (await axios(coinsUrl)).data.slice(0, COIN_TABLE_LENGTH)
 
-    for (let i = 0; i < count; i++) {
-      coins[i].price = await this.getCoinPrice(coins[i].id)
+    for (let coin of coins) {
+      coin.price = await this.getCoinPrice(coin.id)
     }
 
     const newCoinData = coins.slice(0,count).map((coin) => {
