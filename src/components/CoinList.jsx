@@ -1,6 +1,6 @@
 import Coin from './Coin'
 
-import React, { Component } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 const Table = styled.table`
@@ -14,9 +14,8 @@ const Thead = styled.thead`
     font-weight: bold;
 `
 
-export default class CoinList extends Component {
+export default function CoinList(props) {
 
-    render() {
         return (
             <Table>
                 <Thead>
@@ -29,17 +28,16 @@ export default class CoinList extends Component {
                 </Thead>
                 <tbody>
                     {
-                        this.props.coinData.map( 
+                        props.coinData.map( 
                             coin => 
                                 <Coin 
                                     key={coin.id} {...coin} 
-                                    handleRefresh={this.props.handleRefresh}
-                                    balanceHidden={this.props.balanceHidden}
+                                    handleRefresh={props.handleRefresh}
+                                    balanceHidden={props.balanceHidden}
                                 />
                         )
                     }
                 </tbody>
             </Table>
         )
-    }
 }

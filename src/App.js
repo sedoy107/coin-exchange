@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import AppHeader from './components/AppHeader'
 import CoinList from './components/CoinList'
 import AccountBalance from './components/AccountBalance'
@@ -6,94 +6,82 @@ import AccountBalance from './components/AccountBalance'
 import styled from 'styled-components'
 import axios from 'axios'
 
-const COIN_TABLE_LENGTH = 10
+const COIN_TABLE_LENGTH = 8
 
 const Page = styled.div`
   text-align: center;
   background-color: rgb(27, 53, 94);
 `
 
-class App extends React.Component {
+export default function App(props) {
 
-  state = {
-    balance: 10000,
-    balanceHidden: false,
-    coinData: [],
-  }
+  const [balance, setBalance] = useState(10000)
+  const [balanceHidden, setBalanceHidden] = useState(false)
+  const [coinData, setCoinData] = useState([])
 
-  componentDidMount = async () => {
-        await this.getCoinData(COIN_TABLE_LENGTH)
-        const updatePeriod = 300 * 1000;
-        setInterval(async() => {
-          await this.getCoinData(COIN_TABLE_LENGTH)
-        }, updatePeriod);
-    }
-
-  getCoinData = async (count) => {
+  const getCoinData = async (count) => {
     const coinsUrl = 'https://api.coinpaprika.com/v1/coins';
-    
     const coins = (await axios(coinsUrl)).data.slice(0, COIN_TABLE_LENGTH)
-
     for (let coin of coins) {
-      coin.price = await this.getCoinPrice(coin.id)
+      coin.price = await getCoinPrice(coin.id)
     }
-
     const newCoinData = coins.slice(0,count).map((coin) => {
       return {
         ...coin,
       }
     })
-
-    this.setState({coinData: newCoinData})
+    setCoinData(newCoinData)
   }
 
-  getCoinPrice = async (id) => {
+  const getCoinPrice = async (id) => {
     const url = `https://api.coinpaprika.com/v1/tickers/${id}`
     const tickerData = (await axios(url)).data;
-    return Math.round(tickerData.quotes.USD.price * 1000) / 1000
+    return Number(parseFloat(tickerData.quotes.USD.price).toFixed(4))
   }
 
-  handleRefresh = async (id) => {
+  const componentDidMount = async () => {
+    await getCoinData(COIN_TABLE_LENGTH)
+    const updatePeriod = 300 * 1000;
+    setInterval(async() => {
+      await getCoinData(COIN_TABLE_LENGTH)
+    }, updatePeriod);
+  }
 
-    const newPrice = await this.getCoinPrice(id)
-    
-    let newCoinData = this.state.coinData.map((coin) => {
+  useEffect(() => {
+    if (coinData.length == 0) {
+      componentDidMount()
+    }
+  })
+
+  const handleRefresh = async (id) => {
+    const newPrice = await getCoinPrice(id)
+    let newCoinData = coinData.map((coin) => {
       if (coin.id === id) {
         coin.price = newPrice
       }
       return {...coin}
-    })
-        
-    this.setState({coinData: newCoinData})
+    }) 
+    setCoinData(newCoinData)
  }
 
- handleBalanceVisibility = () => {
-   this.setState((prevState) => {
-     return {
-       ...prevState,
-       balanceHidden: !this.state.balanceHidden
-     }
-   })
+ const handleBalanceVisibility = () => {
+   setBalanceHidden(!balanceHidden)
  }
 
-  render() {
-    return (
-      <Page>
-        <AppHeader title="Coin Exchange Project" />
-        <button onClick={async () => {await this.getCoinData(COIN_TABLE_LENGTH)}}>Get Coin Data</button>
-        <AccountBalance 
-          amount={this.state.balance} 
-          balanceHidden={this.state.balanceHidden}
-          handleBalanceVisibility = {this.handleBalanceVisibility}
-        />
-        <CoinList 
-          coinData={this.state.coinData} 
-          handleRefresh={async (id) => {this.handleRefresh(id)}}
-          balanceHidden={this.state.balanceHidden} 
-        />
-      </Page>
-    )
-  }
+  return (
+    <Page>
+      <AppHeader title="Coin Exchange Project" />
+      <button onClick={async () => {await getCoinData(COIN_TABLE_LENGTH)}}>Get Coin Data</button>
+      <AccountBalance 
+        amount={balance} 
+        balanceHidden={balanceHidden}
+        handleBalanceVisibility = {handleBalanceVisibility}
+      />
+      <CoinList 
+        coinData={coinData} 
+        handleRefresh={async (id) => {handleRefresh(id)}}
+        balanceHidden={balanceHidden} 
+      />
+    </Page>
+  )
 }
-
-export default App

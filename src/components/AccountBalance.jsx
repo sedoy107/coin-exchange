@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import React, { Component } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 const Section = styled.section`
@@ -7,27 +7,26 @@ const Section = styled.section`
     font-size: 2rem;
 `
 
-export default class AccountBalance extends Component {
+export default function AccountBalance(props) {
     
-    handleClick = (e) => {
+    const handleClick = (e) => {
         // Disable default form submission action
         e.preventDefault();
         // Call global handler
-        this.props.handleBalanceVisibility()
+        props.handleBalanceVisibility()
     }
 
-    render() {
-        const balanceButtonValue = this.props.balanceHidden ? "Show Balance" : "Hide Balance";
-        const balance = this.props.balanceHidden ? "***" : this.props.amount;
-        return (
-            <Section>
-                Balance: ${balance}
-                <form action="#" method="POST">
-                    <button onClick={this.handleClick}>{balanceButtonValue}</button>
-                </form>
-            </Section>
-        )
-    }
+    const balanceButtonValue = props.balanceHidden ? "Show Balance" : "Hide Balance";
+    const balance = props.balanceHidden ? "***" : props.amount;
+    return (
+        <Section>
+            Balance: ${balance}
+            <form action="#" method="POST">
+                <button onClick={handleClick}>{balanceButtonValue}</button>
+            </form>
+        </Section>
+    )
+
 }
 
 
