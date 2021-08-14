@@ -48,7 +48,7 @@ export default function App(props) {
   }
 
   useEffect(() => {
-    if (coinData.length == 0) {
+    if (coinData.length === 0) {
       componentDidMount()
     }
   })
