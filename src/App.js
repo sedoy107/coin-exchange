@@ -8,11 +8,27 @@ import {HashRouter as Router} from 'react-router-dom'
 import styled from 'styled-components'
 import axios from 'axios'
 
+//import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootswatch/dist/darkly/bootstrap.min.css'
+import '@fortawesome/fontawesome-free/js/all'
+
 const COIN_TABLE_LENGTH = 8
 
 const Page = styled.div`
-  text-align: center;
   background-color: rgb(27, 53, 94);
+`
+
+const Block = styled.div`
+  margin: 12px 0;
+`
+
+const Controls = styled(Block)`
+  text-align: left;
+  margin-left: 8px;
+`
+
+const Button = styled.button`
+  margin: 0 0px;
 `
 
 export default function App(props) {
@@ -30,6 +46,7 @@ export default function App(props) {
     const newCoinData = coins.slice(0,count).map((coin) => {
       return {
         ...coin,
+        balance: 0
       }
     })
     setCoinData(newCoinData)
@@ -66,23 +83,48 @@ export default function App(props) {
     setCoinData(newCoinData)
  }
 
+ const handleTransaction = (id, isBuy) => {
+  const changeBalanceAmount = isBuy ? 1 : -1
+
+  let newCoinData = coinData.map((coin) => {
+    if (coin.id === id) {
+      coin.balance += changeBalanceAmount
+      setBalance(bal => bal - changeBalanceAmount * coin.price)
+    }
+    return {...coin}
+  }) 
+  setCoinData(newCoinData)
+}
+
  const handleBalanceVisibility = () => {
    setBalanceHidden(!balanceHidden)
+ }
+
+ const handleBrrr = () => {
+   setBalance(bal => bal += 1200)
  }
 
   return (
     <Router>
     <Page>
       <AppHeader title="Coin Exchange Project" />
-      <button onClick={async () => {await getCoinData(COIN_TABLE_LENGTH)}}>Get Coin Data</button>
-      <AccountBalance 
-        amount={balance} 
-        balanceHidden={balanceHidden}
-        handleBalanceVisibility = {handleBalanceVisibility}
-      />
+      <Controls>
+        <Button 
+        onClick={async () => {await getCoinData(COIN_TABLE_LENGTH)}} 
+        className='btn btn-primary'>
+          Refresh
+        </Button>
+        <AccountBalance 
+          amount={balance} 
+          balanceHidden={balanceHidden}
+          handleBalanceVisibility = {handleBalanceVisibility}
+          handleBrrr = {handleBrrr}
+        />
+      </Controls>
       <CoinList 
         coinData={coinData} 
         handleRefresh={async (id) => {handleRefresh(id)}}
+        handleTransaction={handleTransaction}
         balanceHidden={balanceHidden} 
       />
     </Page>

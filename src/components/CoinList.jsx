@@ -4,26 +4,27 @@ import React from 'react'
 import styled from 'styled-components'
 
 const Table = styled.table`
-    margin: 50px auto 50px auto;
-    display: inline-block;
-    font-size: 1.4rem;
-    color: white;
+    font-size: 1.2rem;
 `
 
 const Thead = styled.thead`
     font-weight: bold;
 `
 
-export default function CoinList(props) {
+const Td = styled.td`
+    text-align: center;
+`
 
+export default function CoinList(props) {
         return (
-            <Table>
+            <Table className='table table-primary table-bordered'> 
                 <Thead>
                     <tr>
-                        <td>Name</td>
-                        <td>Symbol</td>
-                        <td>Price</td>
-                        <td>Balance</td>
+                        <Td>Name</Td>
+                        <Td>Symbol</Td>
+                        <Td>Price</Td>
+                        <Td>Balance</Td>
+                        <Td>Actions</Td>
                     </tr>
                 </Thead>
                 <tbody>
@@ -33,6 +34,7 @@ export default function CoinList(props) {
                                 <Coin 
                                     key={coin.id} {...coin} 
                                     handleRefresh={props.handleRefresh}
+                                    handleTransaction={props.handleTransaction}
                                     balanceHidden={props.balanceHidden}
                                 />
                         )

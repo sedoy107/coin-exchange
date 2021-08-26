@@ -3,19 +3,48 @@ import PropTypes from "prop-types"
 import styled from 'styled-components'
 
 const Td = styled.td`
-    border: 1px solid #cccccc;
-    width: 25vh;
+    width: 20vh;
+    text-align: left;
 `
 
+const TdPrice = styled(Td)`
+    text-align: right;
+`
 
+const TdBalance = styled(Td)`
+    text-align: center;
+`
+
+const TdActions = styled(Td)`
+    min-width: 25vh;
+    text-align: center;
+`
+
+const Button = styled.button`
+    margin: 0 2px;
+    width: 51px;
+`
+
+var formatter = Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+})
 
 export default class Coin extends Component {
 
-    handleClick = (e) => {
-        // Prevent default action
+    handleRefresh = (e) => {
         e.preventDefault();
-        // Call the actual handler propagated from the parent
         this.props.handleRefresh(this.props.id);
+    }
+
+    handleBuy = (e) => {
+        e.preventDefault();
+        this.props.handleTransaction(this.props.id, true);
+    }
+
+    handleSell = (e) => {
+        e.preventDefault();
+        this.props.handleTransaction(this.props.id, false);
     }
 
     render() {
@@ -24,13 +53,27 @@ export default class Coin extends Component {
             <tr>
                 <Td>{this.props.name}</Td>
                 <Td>{this.props.symbol}</Td>
-                <Td>${this.props.price}</Td>
-                <Td>{balance}</Td>
-                <Td>
+                <TdPrice>{formatter.format(this.props.price)}</TdPrice>
+                <TdBalance>{balance}</TdBalance>
+                <TdActions>
                     <form action="#" method="POST">
-                        <button onClick={this.handleClick}>Refresh</button>
+                        <Button 
+                        onClick={this.handleRefresh}
+                        className={'btn btn-light'}>
+                            <i className="fas fa-sync-alt"></i>
+                        </Button>
+                        <Button 
+                        onClick={this.handleBuy}
+                        className={'btn btn-info'}>
+                            Buy
+                        </Button>
+                        <Button 
+                        onClick={this.handleSell}
+                        className={'btn btn-danger'}>
+                            Sell
+                        </Button>
                     </form>
-                </Td>
+                </TdActions>
             </tr>
         )
     }
