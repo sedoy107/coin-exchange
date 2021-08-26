@@ -3,6 +3,8 @@ import AppHeader from './components/AppHeader'
 import CoinList from './components/CoinList'
 import AccountBalance from './components/AccountBalance'
 
+import {HashRouter as Router} from 'react-router-dom'
+
 import styled from 'styled-components'
 import axios from 'axios'
 
@@ -69,6 +71,7 @@ export default function App(props) {
  }
 
   return (
+    <Router>
     <Page>
       <AppHeader title="Coin Exchange Project" />
       <button onClick={async () => {await getCoinData(COIN_TABLE_LENGTH)}}>Get Coin Data</button>
@@ -83,5 +86,6 @@ export default function App(props) {
         balanceHidden={balanceHidden} 
       />
     </Page>
+    </Router>
   )
 }
